@@ -66,6 +66,4 @@ Note that we are using `/dev/spidev0.0`.
 ```bash
 # For example, your spi_device is 0, and you want to set the speed to 100000 hz and the bitsPer to 16.
 python3 spi.py 0 100000 16
-# Enter the 2 byte date to send without "0x"
-# First Byte: 09    Second Byte: 00
 ```

@@ -32,9 +32,8 @@ dev.bitPerWord(spi_bit)
 
 # prepare data to send
 txbuf = bytearray(2)
-print("Enter the 2 byte data to sned without \"0x\" ")
-txbuf[0] = int(input("First Byte: "),16)
-txbuf[1] = int(input("Second Byte: "),16)
+txbuf[0] = 0x09
+txbuf[1] = 0x00
 
 # send data through SPI
 rxbuf = dev.write(txbuf)

@@ -91,16 +91,9 @@ main(int argc, char** argv)
     /* Take MAX7219 chip with LED Matrix as example.
        We are writing 0x00 to address 0x09 on the chip to brigh the LED Matrix. 
     */
-    
-    printf("Enter the 2 byte data to sned without \"0x\" \n");
-    printf("First Byte: ");
-    scanf("%x", &tx_data[0]);
-    printf("Second Byte: ");
-    scanf("%x", &tx_data[1]);
-    
-    mraa_spi_write_word(spi, tx_data[0]);  
+    mraa_spi_write_word(spi, 0x09);  
     usleep(50000);
-    mraa_spi_write_word(spi, tx_data[1]);  
+    mraa_spi_write_word(spi, 0x00);  
     usleep(50000);
     
     /* stop spi */
