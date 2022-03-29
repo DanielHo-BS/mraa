@@ -17,7 +17,8 @@ X86
 ARM
 ---
 * [ADLINK ROScube-X](../roscube_series/docs/adlink_roscube_x.md)
-* [ADLINK ROScube PICO NX](../roscube_series/docs/adlink_roscube_pico_nx.md)
+* [ADLINK ROScube PICO Nano](../roscube_series/docs/adlink_roscube_npn1.md)
+* [ADLINK ROScube PICO NX](../roscube_series/docs/adlink_roscube_npn2.md)
 
 Examples
 ========
