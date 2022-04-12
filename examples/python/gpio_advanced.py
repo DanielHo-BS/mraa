@@ -19,11 +19,12 @@ c = Counter()
 # inside a python interrupt you cannot use 'basic' types so you'll need to use
 # objects
 def isr_routine(gpio):
-    print("pin " + repr(gpio.getPin(True)) + " = " + repr(gpio.read()))
     c.count += 1
+    print("pin " + repr(gpio.getPin(True)) + " = " + repr(gpio.read()))
+    print("count = ", c.count)
 
 # GPIO
-pin = 6;
+pin = 5 if len(sys.argv) < 2 else int(sys.argv[1])
 
 try:
     # initialise GPIO
@@ -36,7 +37,7 @@ try:
     x.isr(mraa.EDGE_BOTH, isr_routine, x)
 
     # wait until ENTER is pressed
-    var = raw_input("Press ENTER to stop")
+    var = input("Press ENTER to stop\n")
     x.isrExit()
 except ValueError as e:
     print(e)

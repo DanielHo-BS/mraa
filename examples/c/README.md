@@ -54,12 +54,25 @@ I2C_BUS means the supported I2C bus on ROScube platform, which starts from 0.
 ```
 
 # SPI 
-`./spi <SPI_BUS> <SPI_FREQ> <SPI_BIT>` can set the value to spi.
+`./spi <SPI_BUS> <SPI_FREQ>` can set the value to spi.
 
-Take MAX7219 chip with LED Matrix as example.
-We are writing `0x00` to address `0x09` on the chip and bits per word is set at 16, speed is set at 100000HZ. 
+Take MAX7219 chip with LED Matrix as example.  
+Display set of patterns on MAX7219 repeately.
+
+Note that we are using `/dev/spidev0.0`.
 
 ```bash
-# For example, your spi_device is 0, and you want to set the speed to 100000 hz and the bitsPer to 16.
-./spi 0 100000 16
+# For example, your spi_device is 0, and you want to set the speed to 100000 hz.
+./spi 0 100000
+# Press Ctrl+C to exit
+```
+
+# ISR
+`./gpio_advanced.c <PIN> <LED number>` can configure GPIO pin for interruption and turn LED on/off.
+
+When interrput, turn LED on/off 10 times.
+
+```bash
+# For example, configure Pin 5 for interruption and turn LED 0 on/off.
+./gpio_advanced.c 
 ```
