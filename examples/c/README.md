@@ -67,12 +67,11 @@ Note that we are using `/dev/spidev0.0`.
 # Press Ctrl+C to exit
 ```
 
-# ISR
-`./gpio_advanced.c <PIN> <LED number>` can configure GPIO pin for interruption and turn LED on/off.
-
-When interrput, turn LED on/off 10 times.
+# GPIO ISR
+`./gpio_advanced.c <PIN>` can configure GPIO pin for interruption.
 
 ```bash
-# For example, configure Pin 5 for interruption and turn LED 0 on/off.
+# For example, configure Pin 5 for interruption.
 ./gpio_advanced.c 
+# Press Ctrl+C to exit.
 ```

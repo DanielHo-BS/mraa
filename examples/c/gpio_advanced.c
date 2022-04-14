@@ -6,8 +6,8 @@
  *
  * SPDX-License-Identifier: MIT
  *
- * Example usage: Configures GPIO pin for interrupt and turn LED on/off.
- *                Press Ctrl+C to exit
+ * Example usage: Configures GPIO pin for interrupt.
+ *                Press Ctrl+C to exit.
  */
 
 /* standard headers */
@@ -21,36 +21,24 @@
 /* GPIO default */
 #define GPIO_PIN1 5
 
-/* LED default */
-#define LED_NUM1 0
-
-volatile int isr_occurred;
+volatile int isr_occurred = 0;
 
 void int_handler() {
     fprintf(stdout, "ISR triggered\n");
     isr_occurred = 1;
 }
 
-void isr_do(mraa_led_context led1) {
-    /* turn LED on/off 10 times depending on max_brightness value */
-    for(int i =0; i < 10; i++) {
-        mraa_led_set_brightness(led1, 1);
-        usleep(50000);
-        mraa_led_set_brightness(led1, 0);
-        usleep(50000);
-    }
+void isr_do(mraa_gpio_context gpio) {
+    printf("pin %d = %d\n",mraa_gpio_get_pin(gpio),  mraa_gpio_read(gpio));
 }
 
 
 int main(int argc, char *argv[]) {
     mraa_result_t status = MRAA_SUCCESS;
     mraa_gpio_context gpio;
-    mraa_led_context led1;
-    int gpio_pin1, led_num1;
+    int gpio_pin1;
     gpio_pin1 = (argc >= 2)?atoi(argv[1]):GPIO_PIN1;
-    led_num1 = (argc >= 3)?atoi(argv[2]):LED_NUM1;
 
-    
     /* initialize mraa for the platform (not needed most of the times) */
     mraa_init();
 
@@ -65,15 +53,6 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    /* initialize LED */
-    led1 = mraa_led_init(led_num1);
-    usleep(5000);;
-    if (led1 == NULL) {
-        fprintf(stderr, "Failed to initialize LED 1\n");
-        mraa_deinit();
-        return EXIT_FAILURE;
-    }
-
     /* set GPIO1 to input */
     status = mraa_gpio_dir(gpio, MRAA_GPIO_IN);
     usleep(5000);
@@ -83,32 +62,25 @@ int main(int argc, char *argv[]) {
     }
 
     /* configure ISR for GPIO */
-    status = mraa_gpio_isr(gpio, MRAA_GPIO_EDGE_RISING, &int_handler, NULL);
+    status = mraa_gpio_isr(gpio, MRAA_GPIO_EDGE_BOTH, &int_handler, NULL);
     /* Wait for the ISR to configure */
     usleep(5000);
     if (status != MRAA_SUCCESS) {
         fprintf(stderr, "Failed to configure ISR\n");
         goto err_exit;
     }
-    
-    int c = 0;
-    while(c < 10) { 
+
+
+    while(1) { 
         if (isr_occurred){ // When ISR occurred
             isr_occurred = 0; // Clear the flag of interrupt
-            isr_do(led1);
-            c = c + 1;
+            isr_do(gpio);
         }
+        usleep(5000);
     }
-
-    /* turn off LED*/
-    mraa_led_set_brightness(led1, 0);
-    usleep(5000);
 
     /* close GPIO */
     mraa_gpio_close(gpio);
-
-    /* close LED */
-    mraa_led_close(led1);
 
     //! [Interesting]
     /* deinitialize mraa for the platform (not needed most of the times) */

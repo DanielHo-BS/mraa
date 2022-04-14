@@ -69,7 +69,7 @@ python3 spi.py 0 100000
 # Press Ctrl+C to exit
 ```
 
-# ISR
+# GPIO ISR
 `python3 spi.py <GPIO_PIN>` can triggers ISR upon GPIO state change.
 
 ```bash
