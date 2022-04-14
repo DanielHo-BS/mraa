@@ -21,17 +21,14 @@
 /* GPIO default */
 #define GPIO_PIN1 5
 
-volatile int isr_occurred = 0;
+int count = 0;
 
-void int_handler() {
-    fprintf(stdout, "ISR triggered\n");
-    isr_occurred = 1;
-}
-
-void isr_do(mraa_gpio_context gpio) {
+void int_handler(void *arg) {
+    mraa_gpio_context gpio = (mraa_gpio_context)arg;
+    count += 1;
     printf("pin %d = %d\n",mraa_gpio_get_pin(gpio),  mraa_gpio_read(gpio));
+    printf("count = %d\n", count);
 }
-
 
 int main(int argc, char *argv[]) {
     mraa_result_t status = MRAA_SUCCESS;
@@ -62,7 +59,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* configure ISR for GPIO */
-    status = mraa_gpio_isr(gpio, MRAA_GPIO_EDGE_BOTH, &int_handler, NULL);
+    status = mraa_gpio_isr(gpio, MRAA_GPIO_EDGE_BOTH, &int_handler, (void *)gpio);
     /* Wait for the ISR to configure */
     usleep(5000);
     if (status != MRAA_SUCCESS) {
@@ -70,14 +67,7 @@ int main(int argc, char *argv[]) {
         goto err_exit;
     }
 
-
-    while(1) { 
-        if (isr_occurred){ // When ISR occurred
-            isr_occurred = 0; // Clear the flag of interrupt
-            isr_do(gpio);
-        }
-        usleep(5000);
-    }
+    sleep(30);
 
     /* close GPIO */
     mraa_gpio_close(gpio);
